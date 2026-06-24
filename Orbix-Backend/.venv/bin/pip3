@@ -1,4 +1,4 @@
-#!/home/andres-mendoza/Git/Orbix/Orbix-Fronted/.venv/bin/python3
+#!/home/andres-mendoza/Git/Orbix/Orbix-Backend/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
