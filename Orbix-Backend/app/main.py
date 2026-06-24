@@ -1,5 +1,6 @@
-from fastapi import FastAPI
-from app.core.config import settings
+from fastapi import FastAPI, HTTPException
+
+from app.clients.solar_system_open_data import SolarSystemOpenDataClient
 
 app = FastAPI(
     title="Orbix API",
@@ -16,3 +17,24 @@ async def root() -> dict[str, str]:
 @app.get("/health")
 async def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/debug/solar-system")
+async def debug_solar_system() -> dict:
+    try:
+        client = SolarSystemOpenDataClient()
+        response = await client.get_all_bodies()
+
+        bodies = response.get("bodies", [])
+
+        return {
+            "connected": True,
+            "contains_bodies": "bodies" in response,
+            "total_bodies": len(bodies),
+            "sample_body_names": [body.get("englishName") for body in bodies[:5]],
+        }
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to connect to Solar System OpenData: {str(exc)}",
+        ) from exc
