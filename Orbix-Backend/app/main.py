@@ -1,5 +1,8 @@
 from fastapi import FastAPI, HTTPException
-from app.clients.solar_system_open_data import SolarSystemOpenDataClient
+
+from app.services.planets import PlanetService
+from app.services.stars import StarService
+
 
 app = FastAPI(
     title="Orbix API",
@@ -21,8 +24,8 @@ async def healthcheck() -> dict[str, str]:
 @app.get("/info/sun")
 async def get_sun_info():
     try:
-        client = SolarSystemOpenDataClient()
-        return await client.get_sun_general_info()
+        service = StarService()
+        return await service.get_sun_general_info()
     except Exception as exc:
         raise HTTPException(
             status_code=502,
@@ -33,8 +36,8 @@ async def get_sun_info():
 @app.get("/info/planets")
 async def get_planets_info():
     try:
-        client = SolarSystemOpenDataClient()
-        return await client.get_planets_general_info()
+        service = PlanetService()
+        return await service.get_planets_general_info()
     except Exception as exc:
         raise HTTPException(
             status_code=502,
