@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { Group, Mesh } from 'three'
 import type { PlanetVisualConfig } from '../../types/planet'
-import type { SelectedPlanetState } from '../../scene/components/SpaceScene'
+import type { SelectedPlanetState } from '../../types/scene'
 import PlanetMesh from '../components/PlanetMesh'
 import OrbitTrail from '../components/OrbitTrail'
 

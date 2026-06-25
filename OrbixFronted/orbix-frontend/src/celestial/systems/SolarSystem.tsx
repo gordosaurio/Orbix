@@ -1,6 +1,6 @@
 import { planetConfigs } from '../../config/planets'
 import OrbitalBody from './OrbitalBody'
-import type { SelectedPlanetState } from '../../scene/components/SpaceScene'
+import type { SelectedPlanetState } from '../../types/scene'
 
 type SolarSystemProps = {
     selectedPlanetId: string | null

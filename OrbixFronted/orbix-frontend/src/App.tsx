@@ -1,10 +1,30 @@
+import { useMemo, useState } from 'react'
 import SpaceScene from './scene/components/SpaceScene'
+import type { SelectedPlanetState } from './types/scene'
 
 function App() {
+  const [selectedPlanet, setSelectedPlanet] = useState<SelectedPlanetState | null>(null)
+  const [resetToken, setResetToken] = useState(0)
+
+  const initialCameraPosition = useMemo<[number, number, number]>(() => [0, 18, 42], [])
+  const initialTarget = useMemo<[number, number, number]>(() => [0, 0, 0], [])
+
+  const handleResetView = () => {
+    setSelectedPlanet(null)
+    setResetToken((prev) => prev + 1)
+  }
+
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-black text-white">
       <div className="absolute inset-0 z-0">
-        <SpaceScene />
+        <SpaceScene
+          selectedPlanet={selectedPlanet}
+          setSelectedPlanet={setSelectedPlanet}
+          resetToken={resetToken}
+          onResetView={handleResetView}
+          initialCameraPosition={initialCameraPosition}
+          initialTarget={initialTarget}
+        />
       </div>
 
       <div className="pointer-events-none absolute inset-0 z-10">
@@ -22,6 +42,18 @@ function App() {
           </div>
         </header>
       </div>
+
+      {selectedPlanet ? (
+        <button
+          type="button"
+          onClick={handleResetView}
+          className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-slate-950/75 text-2xl text-white backdrop-blur-md transition hover:bg-slate-900/85"
+          aria-label="Volver a la vista inicial"
+          title="Volver"
+        >
+          ×
+        </button>
+      ) : null}
     </div>
   )
 }

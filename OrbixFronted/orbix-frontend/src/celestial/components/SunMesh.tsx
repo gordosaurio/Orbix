@@ -3,7 +3,11 @@ import { useMemo } from 'react'
 import { TextureLoader } from 'three'
 import * as THREE from 'three'
 
-function SunMesh() {
+type SunMeshProps = {
+    onSelect?: () => void
+}
+
+function SunMesh({ onSelect }: SunMeshProps) {
     const loadedTexture = useLoader(TextureLoader, '/textures/sun.jpg')
 
     const sunTexture = useMemo(() => {
@@ -14,7 +18,13 @@ function SunMesh() {
     }, [loadedTexture])
 
     return (
-        <mesh position={[0, 0, 0]}>
+        <mesh
+        position={[0, 0, 0]}
+        onClick={(event) => {
+            event.stopPropagation()
+            onSelect?.()
+        }}
+        >
         <sphereGeometry args={[2.3, 128, 128]} />
         <meshBasicMaterial
             map={sunTexture}
