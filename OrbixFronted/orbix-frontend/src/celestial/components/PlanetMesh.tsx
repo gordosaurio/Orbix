@@ -1,7 +1,8 @@
-import { useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import { useLoader } from '@react-three/fiber'
 import { TextureLoader } from 'three'
 import * as THREE from 'three'
+import type { Mesh } from 'three'
 import type { PlanetVisualConfig } from '../../types/planet'
 import PlanetRing from './PlanetRing'
 
@@ -9,19 +10,11 @@ type PlanetMeshProps = {
     config: PlanetVisualConfig
 }
 
-const PLANET_TEXTURES: Record<string, string> = {
-    mercury: '/textures/mercury.jpg',
-    venus: '/textures/venus.jpg',
-    earth: '/textures/earth.jpg',
-    mars: '/textures/mars.jpg',
-    jupiter: '/textures/jupiter.jpg',
-    saturn: '/textures/saturn.jpg',
-    uranus: '/textures/uranus.jpg',
-    neptune: '/textures/neptune.jpg',
-}
-
-function PlanetMesh({ config }: PlanetMeshProps) {
-    const texturePath = PLANET_TEXTURES[config.id]
+const PlanetMesh = forwardRef<Mesh, PlanetMeshProps>(function PlanetMesh(
+    { config },
+    ref
+    ) {
+    const texturePath = config.texturePath
 
     const loadedTexture = useLoader(
         TextureLoader,
@@ -39,7 +32,7 @@ function PlanetMesh({ config }: PlanetMeshProps) {
 
     return (
         <group>
-        <mesh>
+        <mesh ref={ref}>
             <sphereGeometry args={[config.radius, 48, 48]} />
             <meshStandardMaterial
             map={planetTexture ?? undefined}
@@ -54,6 +47,6 @@ function PlanetMesh({ config }: PlanetMeshProps) {
         {config.ring ? <PlanetRing config={config.ring} /> : null}
         </group>
     )
-}
+})
 
 export default PlanetMesh

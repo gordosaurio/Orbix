@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import type { Group } from 'three'
+import type { Group, Mesh } from 'three'
 import type { PlanetVisualConfig } from '../../types/planet'
 import PlanetMesh from '../components/PlanetMesh'
 import OrbitTrail from '../components/OrbitTrail'
@@ -10,7 +10,8 @@ type OrbitalBodyProps = {
 }
 
 function OrbitalBody({ config }: OrbitalBodyProps) {
-    const planetRef = useRef<Group>(null)
+    const orbitRef = useRef<Group>(null)
+    const planetMeshRef = useRef<Mesh>(null)
 
     const initialAngle = useMemo(() => {
         const angleMap: Record<string, number> = {
@@ -27,6 +28,20 @@ function OrbitalBody({ config }: OrbitalBodyProps) {
         return angleMap[config.id] ?? 0
     }, [config.id])
 
+    const axialRotationSpeed = useMemo(() => {
+        const minOrbit = 7.5
+        const maxOrbit = 38
+        const normalized =
+        1 - (config.orbitRadius - minOrbit) / (maxOrbit - minOrbit)
+
+        const clamped = Math.max(0, Math.min(1, normalized))
+
+        const minSpin = 0.25
+        const maxSpin = 1.4
+
+        return minSpin + clamped * (maxSpin - minSpin)
+    }, [config.orbitRadius])
+
     const angleRef = useRef(initialAngle)
     const [trailAngle, setTrailAngle] = useState(initialAngle)
 
@@ -37,10 +52,13 @@ function OrbitalBody({ config }: OrbitalBodyProps) {
         const x = Math.cos(currentAngle) * config.orbitRadius
         const z = Math.sin(currentAngle) * config.orbitRadius
 
-        if (planetRef.current) {
-        planetRef.current.position.x = x
-        planetRef.current.position.z = z
-        planetRef.current.rotation.y += delta * config.rotationSpeed * 2
+        if (orbitRef.current) {
+        orbitRef.current.position.x = x
+        orbitRef.current.position.z = z
+        }
+
+        if (planetMeshRef.current) {
+        planetMeshRef.current.rotation.y += delta * axialRotationSpeed
         }
 
         setTrailAngle(currentAngle)
@@ -49,8 +67,9 @@ function OrbitalBody({ config }: OrbitalBodyProps) {
     return (
         <group>
         <OrbitTrail radius={config.orbitRadius} angle={trailAngle} />
-        <group ref={planetRef}>
-            <PlanetMesh config={config} />
+
+        <group ref={orbitRef}>
+            <PlanetMesh ref={planetMeshRef} config={config} />
         </group>
         </group>
     )
