@@ -8,10 +8,11 @@ import PlanetRing from './PlanetRing'
 
 type PlanetMeshProps = {
     config: PlanetVisualConfig
+    onSelect?: () => void
 }
 
 const PlanetMesh = forwardRef<Mesh, PlanetMeshProps>(function PlanetMesh(
-    { config },
+    { config, onSelect },
     ref
     ) {
     const texturePath = config.texturePath
@@ -32,7 +33,13 @@ const PlanetMesh = forwardRef<Mesh, PlanetMeshProps>(function PlanetMesh(
 
     return (
         <group>
-        <mesh ref={ref}>
+        <mesh
+            ref={ref}
+            onClick={(event) => {
+            event.stopPropagation()
+            onSelect?.()
+            }}
+        >
             <sphereGeometry args={[config.radius, 48, 48]} />
             <meshStandardMaterial
             map={planetTexture ?? undefined}

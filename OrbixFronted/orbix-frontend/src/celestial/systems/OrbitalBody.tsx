@@ -1,17 +1,28 @@
 import { useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 import type { Group, Mesh } from 'three'
 import type { PlanetVisualConfig } from '../../types/planet'
+import type { SelectedPlanetState } from '../../scene/components/SpaceScene'
 import PlanetMesh from '../components/PlanetMesh'
 import OrbitTrail from '../components/OrbitTrail'
 
 type OrbitalBodyProps = {
     config: PlanetVisualConfig
+    isSelected: boolean
+    onSelectPlanet: (planet: SelectedPlanetState) => void
+    onPlanetPositionChange: (planet: SelectedPlanetState) => void
 }
 
-function OrbitalBody({ config }: OrbitalBodyProps) {
+function OrbitalBody({
+    config,
+    isSelected,
+    onSelectPlanet,
+    onPlanetPositionChange,
+    }: OrbitalBodyProps) {
     const orbitRef = useRef<Group>(null)
     const planetMeshRef = useRef<Mesh>(null)
+    const worldPosition = useRef(new THREE.Vector3())
 
     const initialAngle = useMemo(() => {
         const angleMap: Record<string, number> = {
@@ -31,9 +42,7 @@ function OrbitalBody({ config }: OrbitalBodyProps) {
     const axialRotationSpeed = useMemo(() => {
         const minOrbit = 7.5
         const maxOrbit = 38
-        const normalized =
-        1 - (config.orbitRadius - minOrbit) / (maxOrbit - minOrbit)
-
+        const normalized = 1 - (config.orbitRadius - minOrbit) / (maxOrbit - minOrbit)
         const clamped = Math.max(0, Math.min(1, normalized))
 
         const minSpin = 0.25
@@ -55,21 +64,46 @@ function OrbitalBody({ config }: OrbitalBodyProps) {
         if (orbitRef.current) {
         orbitRef.current.position.x = x
         orbitRef.current.position.z = z
+        orbitRef.current.getWorldPosition(worldPosition.current)
         }
 
         if (planetMeshRef.current) {
         planetMeshRef.current.rotation.y += delta * axialRotationSpeed
         }
 
+        if (isSelected) {
+        const p = worldPosition.current
+        onPlanetPositionChange({
+            id: config.id,
+            name: config.name,
+            radius: config.radius,
+            position: [p.x, p.y, p.z],
+        })
+        }
+
         setTrailAngle(currentAngle)
     })
+
+    const handleSelect = () => {
+        const p = worldPosition.current
+        onSelectPlanet({
+        id: config.id,
+        name: config.name,
+        radius: config.radius,
+        position: [p.x, p.y, p.z],
+        })
+    }
 
     return (
         <group>
         <OrbitTrail radius={config.orbitRadius} angle={trailAngle} />
 
         <group ref={orbitRef}>
-            <PlanetMesh ref={planetMeshRef} config={config} />
+            <PlanetMesh
+            ref={planetMeshRef}
+            config={config}
+            onSelect={handleSelect}
+            />
         </group>
         </group>
     )
