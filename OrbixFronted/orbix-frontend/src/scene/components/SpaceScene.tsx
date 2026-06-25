@@ -5,6 +5,7 @@ import SceneLights from './SceneLights'
 import SceneEnvironment from './SceneEnvironment'
 import CameraControls from '../controls/CameraControls'
 import SolarSystem from '../../celestial/systems/SolarSystem'
+import SunMesh from '../../celestial/components/SunMesh'
 
 function SpaceScene() {
     return (
@@ -20,22 +21,15 @@ function SpaceScene() {
         <SceneEnvironment />
         <CameraControls />
 
-        <mesh position={[0, 0, 0]}>
-            <sphereGeometry args={[2.3, 64, 64]} />
-            <meshStandardMaterial
-            color="#f6e27a"
-            emissive="#ffb347"
-            emissiveIntensity={3}
-            />
-        </mesh>
+        <SunMesh />
 
         <SolarSystem />
 
         <EffectComposer>
             <Bloom
-            intensity={0.2}
-            luminanceThreshold={0.8}
-            luminanceSmoothing={0.2}
+            intensity={0.08}
+            luminanceThreshold={0.15}
+            luminanceSmoothing={0.45}
             mipmapBlur
             />
         </EffectComposer>
