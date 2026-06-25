@@ -9,7 +9,19 @@ body,
 }
 
 body {
-  background: #030712;
-  color: white;
   overflow: hidden;
+  background:
+    radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 28%),
+    radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.06), transparent 22%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.04), transparent 18%),
+    linear-gradient(180deg, #020617 0%, #010308 55%, #000000 100%);
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+canvas {
+  display: block;
 }
