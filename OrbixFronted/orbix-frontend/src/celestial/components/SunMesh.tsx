@@ -1,13 +1,15 @@
-import { useLoader } from '@react-three/fiber'
-import { useMemo } from 'react'
+import { useLoader, useFrame } from '@react-three/fiber'
+import { useMemo, useRef } from 'react'
 import { TextureLoader } from 'three'
 import * as THREE from 'three'
+import type { Mesh } from 'three'
 
 type SunMeshProps = {
     onSelect?: () => void
 }
 
 function SunMesh({ onSelect }: SunMeshProps) {
+    const sunRef = useRef<Mesh>(null)
     const loadedTexture = useLoader(TextureLoader, '/textures/sun.jpg')
 
     const sunTexture = useMemo(() => {
@@ -17,8 +19,14 @@ function SunMesh({ onSelect }: SunMeshProps) {
         return texture
     }, [loadedTexture])
 
+    useFrame((_, delta) => {
+        if (!sunRef.current) return
+        sunRef.current.rotation.y += delta * 0.08
+    })
+
     return (
         <mesh
+        ref={sunRef}
         position={[0, 0, 0]}
         onClick={(event) => {
             event.stopPropagation()
