@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useLoader } from '@react-three/fiber'
 import { TextureLoader } from 'three'
 import * as THREE from 'three'
@@ -36,14 +36,6 @@ function PlanetMesh({ config }: PlanetMeshProps) {
         texture.needsUpdate = true
         return texture
     }, [loadedTexture, texturePath])
-
-    useEffect(() => {
-        if (!texturePath) {
-        console.warn(`[PlanetMesh] No texture mapping found for planet id: ${config.id}`)
-        return
-        }
-
-    }, [config.id, texturePath, planetTexture])
 
     return (
         <group>
