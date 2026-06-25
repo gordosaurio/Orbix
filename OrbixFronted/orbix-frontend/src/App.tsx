@@ -21,19 +21,6 @@ function App() {
             </p>
           </div>
         </header>
-
-        <aside className="pointer-events-auto absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl md:bottom-8 md:left-auto md:right-8 md:top-24 md:w-90">
-          <p className="text-[10px] uppercase tracking-[0.35em] text-slate-400">
-            Scene Status
-          </p>
-          <h2 className="mt-3 text-lg font-medium text-white">
-            Phase 2 Foundation
-          </h2>
-          <p className="mt-2 text-sm leading-6 text-slate-300">
-            Deep-space environment active. Next we will add the Sun, planets,
-            orbital guides, and motion systems.
-          </p>
-        </aside>
       </div>
     </div>
   )

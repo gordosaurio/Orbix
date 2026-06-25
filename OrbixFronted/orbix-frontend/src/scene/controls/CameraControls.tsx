@@ -1,22 +1,23 @@
 import { OrbitControls } from '@react-three/drei'
 
 function CameraControls() {
-    return (
-        <OrbitControls
-        enablePan
-        enableZoom
-        enableRotate
-        zoomSpeed={0.7}
-        panSpeed={0.6}
-        rotateSpeed={0.45}
-        minDistance={10}
-        maxDistance={90}
-        maxPolarAngle={Math.PI / 1.85}
-        minPolarAngle={0.2}
-        dampingFactor={0.08}
-        enableDamping
-        />
-    )
+  return (
+    <OrbitControls
+      enablePan
+      enableZoom
+      enableRotate
+      screenSpacePanning
+      zoomSpeed={0.9}
+      panSpeed={0.9}
+      rotateSpeed={0.55}
+      minDistance={8}
+      maxDistance={120}
+      minPolarAngle={0.15}
+      maxPolarAngle={Math.PI - 0.2}
+      dampingFactor={0.09}
+      enableDamping
+    />
+  )
 }
 
 export default CameraControls
