@@ -41,10 +41,19 @@ function CameraControls({
         const planetPos = new THREE.Vector3(...selectedPlanet.position)
 
         if (previousSelectionId.current !== selectedPlanet.id) {
-        const currentOffset = camera.position.clone().sub(controlsRef.current.target)
-
-        followOffset.current.copy(currentOffset)
         followTarget.current.copy(planetPos)
+
+        const zoomDistance = Math.max(selectedPlanet.radius * 6, 3.5)
+
+        followOffset.current.set(
+            zoomDistance,
+            zoomDistance * 0.45,
+            zoomDistance
+        )
+
+        camera.position.copy(planetPos.clone().add(followOffset.current))
+        controlsRef.current.target.copy(planetPos)
+        controlsRef.current.update()
 
         previousSelectionId.current = selectedPlanet.id
         }
@@ -85,7 +94,7 @@ function CameraControls({
         zoomSpeed={0.9}
         panSpeed={0.9}
         rotateSpeed={0.55}
-        minDistance={4}
+        minDistance={2}
         maxDistance={120}
         minPolarAngle={0.15}
         maxPolarAngle={Math.PI - 0.2}
