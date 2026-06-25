@@ -31,21 +31,6 @@ function SpaceScene() {
 
         <SolarSystem />
 
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[7.5, 7.56, 256]} />
-            <meshBasicMaterial color="#64748b" transparent opacity={0.35} />
-        </mesh>
-
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[12, 12.05, 256]} />
-            <meshBasicMaterial color="#475569" transparent opacity={0.2} />
-        </mesh>
-
-        <mesh rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[17.5, 17.55, 256]} />
-            <meshBasicMaterial color="#334155" transparent opacity={0.14} />
-        </mesh>
-
         <EffectComposer>
             <Bloom
             intensity={0.2}

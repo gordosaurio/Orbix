@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import type { Group, Mesh } from 'three'
+import type { Group } from 'three'
 import type { PlanetVisualConfig } from '../../types/planet'
 import PlanetMesh from '../components/PlanetMesh'
 
@@ -12,7 +12,7 @@ function OrbitalBody({ config }: OrbitalBodyProps) {
     const orbitRef = useRef<Group>(null)
     const planetRef = useRef<Group>(null)
 
-    useFrame((state, delta) => {
+    useFrame((_, delta) => {
         if (orbitRef.current) {
         orbitRef.current.rotation.y += delta * config.orbitSpeed * 0.12
         }
