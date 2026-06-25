@@ -4,6 +4,7 @@ import SceneCamera from './SceneCamera'
 import SceneLights from './SceneLights'
 import SceneEnvironment from './SceneEnvironment'
 import CameraControls from '../controls/CameraControls'
+import SolarSystem from '../../celestial/systems/SolarSystem'
 
 function SpaceScene() {
     return (
@@ -27,6 +28,8 @@ function SpaceScene() {
             emissiveIntensity={3}
             />
         </mesh>
+
+        <SolarSystem />
 
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
             <ringGeometry args={[7.5, 7.56, 256]} />
