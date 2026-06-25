@@ -11,6 +11,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.012,
         emissive: '#5b5650',
         emissiveIntensity: 0.08,
+        texturePath: '/textures/mercury.jpg',
     },
     {
         id: 'venus',
@@ -22,6 +23,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.008,
         emissive: '#7a5a2b',
         emissiveIntensity: 0.1,
+        texturePath: '/textures/venus.jpg',
     },
     {
         id: 'earth',
@@ -33,6 +35,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.02,
         emissive: '#1f4fbf',
         emissiveIntensity: 0.12,
+        texturePath: '/textures/earth.jpg',
     },
     {
         id: 'mars',
@@ -44,6 +47,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.018,
         emissive: '#7a3a1f',
         emissiveIntensity: 0.08,
+        texturePath: '/textures/mars.jpg',
     },
     {
         id: 'jupiter',
@@ -55,6 +59,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.04,
         emissive: '#8a6a52',
         emissiveIntensity: 0.06,
+        texturePath: '/textures/jupiter.jpg',
     },
     {
         id: 'saturn',
@@ -66,11 +71,13 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.034,
         emissive: '#8c7a52',
         emissiveIntensity: 0.05,
+        texturePath: '/textures/saturn.jpg',
         ring: {
         innerRadius: 1.55,
         outerRadius: 2.35,
         color: '#cbb892',
         opacity: 0.42,
+        texturePath: '/textures/saturn_ring.png',
         },
     },
     {
@@ -83,6 +90,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.026,
         emissive: '#4f8f8b',
         emissiveIntensity: 0.05,
+        texturePath: '/textures/uranus.jpg',
     },
     {
         id: 'neptune',
@@ -94,5 +102,6 @@ export const planetConfigs: PlanetVisualConfig[] = [
         rotationSpeed: 0.024,
         emissive: '#243c9a',
         emissiveIntensity: 0.08,
+        texturePath: '/textures/neptune.jpg',
     },
 ]

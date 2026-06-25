@@ -3,6 +3,7 @@ export type PlanetRingConfig = {
     outerRadius: number
     color: string
     opacity: number
+    texturePath?: string
 }
 
 export type PlanetVisualConfig = {
@@ -15,5 +16,6 @@ export type PlanetVisualConfig = {
     rotationSpeed: number
     emissive?: string
     emissiveIntensity?: number
+    texturePath?: string
     ring?: PlanetRingConfig
 }
