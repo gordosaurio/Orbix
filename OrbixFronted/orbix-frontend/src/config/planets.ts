@@ -2,7 +2,7 @@ import type { PlanetVisualConfig } from '../types/planet'
 
 export const planetConfigs: PlanetVisualConfig[] = [
     {
-        id: 'mercure',
+        id: 'mercury',
         name: 'Mercury',
         color: '#a7a29a',
         radius: 0.38,
@@ -26,7 +26,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         texturePath: '/textures/venus.jpg',
     },
     {
-        id: 'terre',
+        id: 'earth',
         name: 'Earth',
         color: '#4f83ff',
         radius: 0.65,
@@ -62,7 +62,7 @@ export const planetConfigs: PlanetVisualConfig[] = [
         texturePath: '/textures/jupiter.jpg',
     },
     {
-        id: 'saturne',
+        id: 'saturn',
         name: 'Saturn',
         color: '#d8c08c',
         radius: 1.22,
