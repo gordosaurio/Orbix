@@ -22,7 +22,6 @@ function SpaceScene({
     selectedPlanet,
     setSelectedPlanet,
     resetToken,
-    onResetView,
     initialCameraPosition,
     initialTarget,
     }: SpaceSceneProps) {
@@ -45,7 +44,17 @@ function SpaceScene({
             resetToken={resetToken}
         />
 
-        <SunMesh onSelect={onResetView} />
+        <SunMesh
+            onSelect={() =>
+            setSelectedPlanet({
+                id: 'sun',
+                name: 'Sun',
+                kind: 'star',
+                radius: 4.2,
+                position: [0, 0, 0],
+            })
+            }
+        />
 
         <SolarSystem
             selectedPlanetId={selectedPlanet?.id ?? null}
