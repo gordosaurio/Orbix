@@ -29,5 +29,23 @@ class BodyGeneralInfoSchema(BaseModel):
     avgTemp: int
 
 
+class PlanetSpecializedInfoSchema(BaseModel):
+    name: str
+    revised: str | None = None
+    meanRadiusKm: float | None = None
+    equatorialRadiusKm: float | None = None
+    densityGcm3: float | None = None
+    massValue: float | None = None
+    massExponent: int | None = None
+    gravityMs2: float | None = None
+    meanTemperatureK: float | None = None
+    siderealRotationPeriod: str | None = None
+    siderealOrbitPeriod: str | None = None
+    orbitSpeedKmS: float | None = None
+    escapeSpeedKmS: float | None = None
+    obliquityToOrbit: str | None = None
+    geometricAlbedo: float | None = None
+
+
 class PlanetsGeneralInfoResponseSchema(RootModel[Dict[str, BodyGeneralInfoSchema]]):
     pass

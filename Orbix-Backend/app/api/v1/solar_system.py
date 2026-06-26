@@ -1,7 +1,11 @@
 from fastapi import APIRouter, HTTPException
 
 from app.clients.jpl_horizons import JplHorizonsClient
-from app.schemas import BodyGeneralInfoSchema, PlanetsGeneralInfoResponseSchema
+from app.schemas import (
+    BodyGeneralInfoSchema,
+    PlanetSpecializedInfoSchema,
+    PlanetsGeneralInfoResponseSchema,
+)
 from app.services.planets import PlanetService
 from app.services.stars import StarService
 
@@ -98,4 +102,29 @@ async def get_jpl_body_by_id(body_id: str):
         raise HTTPException(
             status_code=502,
             detail=f"Failed to fetch JPL Horizons body information: {str(exc)}",
+        ) from exc
+
+
+@router.get(
+    "/jpl/specialized/{planet_name}",
+    response_model=PlanetSpecializedInfoSchema,
+)
+async def get_jpl_specialized_planet_info(planet_name: str):
+    try:
+        client = JplHorizonsClient()
+        planet = await client.get_specialized_planet_info_by_name(planet_name)
+
+        if planet is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"JPL specialized data for planet '{planet_name}' was not found.",
+            )
+
+        return planet
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to fetch JPL specialized planet information: {str(exc)}",
         ) from exc

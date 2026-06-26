@@ -1,6 +1,7 @@
 from app.schemas.solar_system import (
     BodyGeneralInfoSchema,
     MassSchema,
+    PlanetSpecializedInfoSchema,
     PlanetsGeneralInfoResponseSchema,
     VolumeSchema,
 )
@@ -8,6 +9,7 @@ from app.schemas.solar_system import (
 __all__ = [
     "BodyGeneralInfoSchema",
     "MassSchema",
+    "PlanetSpecializedInfoSchema",
     "PlanetsGeneralInfoResponseSchema",
     "VolumeSchema",
 ]
