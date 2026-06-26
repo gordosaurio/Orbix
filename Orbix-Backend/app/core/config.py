@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     solar_system_api_token: str = Field(...)
 
     jpl_horizons_api_base_url: str = Field(...)
+    nasa_images_api_base_url: str = Field(...)
 
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -66,5 +66,20 @@ class SunSpecializedInfoSchema(BaseModel):
     sunspotCycleYears: float | None = None
 
 
+class NasaMediaItemSchema(BaseModel):
+    nasaId: str
+    title: str
+    description: str | None = None
+    url: str
+    previewUrl: str | None = None
+    mediaType: str
+
+
+class PlanetMediaResponseSchema(BaseModel):
+    name: str
+    images: list[NasaMediaItemSchema]
+    audio: list[NasaMediaItemSchema]
+
+
 class PlanetsGeneralInfoResponseSchema(RootModel[Dict[str, BodyGeneralInfoSchema]]):
     pass

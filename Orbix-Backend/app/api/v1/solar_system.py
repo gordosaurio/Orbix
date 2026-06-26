@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
 
 from app.clients.jpl_horizons import JplHorizonsClient
+from app.clients.nasa_images import NasaImagesClient
 from app.schemas import (
     BodyGeneralInfoSchema,
+    PlanetMediaResponseSchema,
     PlanetSpecializedInfoSchema,
     PlanetsGeneralInfoResponseSchema,
     SunSpecializedInfoSchema,
@@ -153,4 +155,19 @@ async def get_jpl_specialized_sun_info():
         raise HTTPException(
             status_code=502,
             detail=f"Failed to fetch JPL specialized Sun information: {str(exc)}",
+        ) from exc
+
+
+@router.get(
+    "/nasa-media/{planet_name}",
+    response_model=PlanetMediaResponseSchema,
+)
+async def get_nasa_media_by_planet_name(planet_name: str):
+    try:
+        client = NasaImagesClient()
+        return await client.search_planet_media_by_name(planet_name)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to fetch NASA media for planet '{planet_name}': {str(exc)}",
         ) from exc
