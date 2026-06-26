@@ -78,7 +78,6 @@ class NasaMediaItemSchema(BaseModel):
 class PlanetMediaResponseSchema(BaseModel):
     name: str
     images: list[NasaMediaItemSchema]
-    audio: list[NasaMediaItemSchema]
 
 
 class PlanetsGeneralInfoResponseSchema(RootModel[Dict[str, BodyGeneralInfoSchema]]):

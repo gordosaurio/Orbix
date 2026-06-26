@@ -9,6 +9,7 @@ from app.schemas.solar_system import (
     VolumeSchema,
 )
 
+
 __all__ = [
     "BodyGeneralInfoSchema",
     "MassSchema",

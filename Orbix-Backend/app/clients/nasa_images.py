@@ -18,7 +18,7 @@ class NasaImagesClient:
             path="/search",
             params={
                 "q": planet_name,
-                "media_type": "image,audio",
+                "media_type": "image",
             },
         )
 
@@ -26,7 +26,6 @@ class NasaImagesClient:
         items = collection.get("items", [])
 
         images: list[NasaMediaItemSchema] = []
-        audio: list[NasaMediaItemSchema] = []
 
         for item in items:
             data_list = item.get("data", [])
@@ -44,7 +43,7 @@ class NasaImagesClient:
 
             asset_url = await self._resolve_asset_url(nasa_id, media_type, preview_url)
 
-            if not nasa_id or not asset_url or not media_type:
+            if not nasa_id or not asset_url or media_type != "image":
                 continue
 
             media_item = NasaMediaItemSchema(
@@ -56,18 +55,13 @@ class NasaImagesClient:
                 mediaType=media_type,
             )
 
-            if media_type == "image":
-                images.append(media_item)
-            elif media_type == "audio":
-                audio.append(media_item)
+            images.append(media_item)
 
         images = self._pick_up_to_five(images)
-        audio = self._pick_up_to_five(audio)
 
         return PlanetMediaResponseSchema(
             name=planet_name,
             images=images,
-            audio=audio,
         )
 
     async def _resolve_asset_url(
@@ -90,14 +84,6 @@ class NasaImagesClient:
                 preferred = [
                     href for href in hrefs
                     if href.lower().endswith((".jpg", ".jpeg", ".png", ".webp"))
-                ]
-                if preferred:
-                    return preferred[0]
-
-            if media_type == "audio":
-                preferred = [
-                    href for href in hrefs
-                    if href.lower().endswith((".mp3", ".wav", ".ogg", ".m4a"))
                 ]
                 if preferred:
                     return preferred[0]
