@@ -2,40 +2,60 @@ import { useEffect, useMemo, useState } from 'react'
 import SpaceScene from './scene/components/SpaceScene'
 import PlanetInfoPanel from './components/planet/PlanetInfoPanel'
 import type { SelectedPlanetState } from './types/scene'
+import type { CelestialBodyApiResponse } from './types/api'
 import { getPlanetInfoById, getSunInfo } from './lib/api'
 
 function App() {
   const [selectedPlanet, setSelectedPlanet] = useState<SelectedPlanetState | null>(null)
+  const [selectedBodyInfo, setSelectedBodyInfo] = useState<CelestialBodyApiResponse | null>(null)
   const [resetToken, setResetToken] = useState(0)
 
   const initialCameraPosition = useMemo<[number, number, number]>(() => [0, 18, 42], [])
   const initialTarget = useMemo<[number, number, number]>(() => [0, 0, 0], [])
 
+  const selectedBodyId = selectedPlanet?.id ?? null
+  const selectedBodyKind = selectedPlanet?.kind ?? null
+
   const handleResetView = () => {
     setSelectedPlanet(null)
+    setSelectedBodyInfo(null)
     setResetToken((prev) => prev + 1)
   }
 
   useEffect(() => {
-    if (!selectedPlanet) return
+    if (!selectedBodyId || !selectedBodyKind) return
+
+    let cancelled = false
 
     const fetchBodyInfo = async () => {
       try {
-        if (selectedPlanet.kind === 'star') {
-          const sunData = await getSunInfo()
-          console.log('SUN INFO =>', sunData)
-          return
-        }
+        const data =
+          selectedBodyKind === 'star'
+            ? await getSunInfo()
+            : await getPlanetInfoById(selectedBodyId)
 
-        const planetData = await getPlanetInfoById(selectedPlanet.id)
-        console.log(`PLANET INFO (${selectedPlanet.id}) =>`, planetData)
+        if (!cancelled) {
+          setSelectedBodyInfo(data)
+          if (selectedBodyKind === 'star') {
+            console.log('SUN INFO =>', data)
+          } else {
+            console.log(`PLANET INFO (${selectedBodyId}) =>`, data)
+          }
+        }
       } catch (error) {
-        console.error('Error fetching celestial body info:', error)
+        if (!cancelled) {
+          setSelectedBodyInfo(null)
+          console.error('Error fetching celestial body info:', error)
+        }
       }
     }
 
     void fetchBodyInfo()
-  }, [selectedPlanet?.id, selectedPlanet?.kind])
+
+    return () => {
+      cancelled = true
+    }
+  }, [selectedBodyId, selectedBodyKind])
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-black text-white">
@@ -65,7 +85,10 @@ function App() {
           </div>
         </header>
 
-        <PlanetInfoPanel selectedBody={selectedPlanet} />
+        <PlanetInfoPanel
+          selectedBody={selectedPlanet}
+          selectedBodyInfo={selectedBodyInfo}
+        />
       </div>
 
       {selectedPlanet ? (

@@ -1,16 +1,70 @@
 import { AnimatePresence, motion } from 'motion/react'
 import type { SelectedPlanetState } from '../../types/scene'
+import type { CelestialBodyApiResponse } from '../../types/api'
 import { celestialUiMap } from '../../data/planetUi'
 
 type PlanetInfoPanelProps = {
     selectedBody: SelectedPlanetState | null
+    selectedBodyInfo: CelestialBodyApiResponse | null
 }
 
-function PlanetInfoPanel({ selectedBody }: PlanetInfoPanelProps) {
+function formatTemperature(value?: number) {
+    if (value === undefined || value === null) return 'Unknown'
+    return `${value} K`
+}
+
+function formatMoons(value?: number) {
+    if (value === undefined || value === null) return 'Unknown'
+    return `${value}`
+}
+
+function formatGravity(value?: number) {
+    if (value === undefined || value === null) return 'Unknown'
+    return `${value.toFixed(2)} m/s²`
+}
+
+function formatRadius(value?: number) {
+    if (value === undefined || value === null) return 'Unknown'
+    return `${new Intl.NumberFormat('en-US').format(Math.round(value))} km`
+}
+
+function formatDensity(value?: number) {
+    if (value === undefined || value === null) return 'Unknown'
+    return `${value.toFixed(2)} g/cm³`
+}
+
+function formatDiscovery(discoveredBy?: string) {
+    if (!discoveredBy || discoveredBy.trim().length === 0) return 'Unknown'
+    return discoveredBy
+}
+
+function formatDiscoveryDate(value?: string) {
+    if (!value || value.trim().length === 0) return 'Unknown'
+    return value
+}
+
+function PlanetInfoPanel({ selectedBody, selectedBodyInfo }: PlanetInfoPanelProps) {
     const selectedBodyUi = selectedBody ? celestialUiMap[selectedBody.id] : null
 
+    const primaryStats = selectedBodyInfo
+        ? [
+            { label: 'Temperature', value: formatTemperature(selectedBodyInfo.avgTemp) },
+            { label: 'Moons', value: formatMoons(selectedBodyInfo.moons) },
+            { label: 'Gravity', value: formatGravity(selectedBodyInfo.gravity) },
+            { label: 'Equatorial radius', value: formatRadius(selectedBodyInfo.equaRadius) },
+        ]
+        : []
+
+    const secondaryStats = selectedBodyInfo
+        ? [
+            { label: 'Density', value: formatDensity(selectedBodyInfo.density) },
+            { label: 'Discovered by', value: formatDiscovery(selectedBodyInfo.discoveredBy) },
+            { label: 'Discovery date', value: formatDiscoveryDate(selectedBodyInfo.discoveryDate) },
+        ]
+        : []
+
     return (
-        <aside className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-auto md:right-8 md:top-24 md:w-100">
+        <aside className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-auto md:right-8 md:top-24 md:w-104">
         <AnimatePresence mode="wait">
             {selectedBody && selectedBodyUi ? (
             <motion.div
@@ -24,7 +78,7 @@ function PlanetInfoPanel({ selectedBody }: PlanetInfoPanelProps) {
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_20%),radial-gradient(circle_at_15%_0%,rgba(96,165,250,0.16),transparent_26%),linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.015))]" />
                 <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-linear-to-r from-transparent via-white/40 to-transparent" />
                 <div
-                className="pointer-events-none absolute -right-13.5 -top-13.5 h-32 w-32 rounded-full opacity-40 blur-3xl"
+                className="pointer-events-none absolute -right-14 -top-14 h-32 w-32 rounded-full opacity-40 blur-3xl"
                 style={{ backgroundColor: selectedBodyUi.accent }}
                 />
 
@@ -59,67 +113,68 @@ function PlanetInfoPanel({ selectedBody }: PlanetInfoPanelProps) {
                     />
                 </div>
 
-                <div className="grid grid-cols-1 gap-3">
-                    <div className="rounded-[22px] border border-white/8 bg-white/4.5 p-4">
-                    <p className="text-[11px] uppercase tracking-[0.32em] text-slate-500">
-                        Focus state
-                    </p>
-                    <p className="mt-3 text-sm leading-6 text-slate-300">
-                        {selectedBody.kind === 'star'
-                        ? 'Core star selected. This panel now highlights the visual identity of the system center.'
-                        : 'Orbital body selected. This panel is ready to receive richer backend-driven planetary data.'}
-                    </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-[22px] border border-white/8 bg-white/4.5 p-4">
+                <div className="grid grid-cols-2 gap-3">
+                    {primaryStats.map((stat) => (
+                    <div
+                        key={stat.label}
+                        className="rounded-[22px] border border-white/8 bg-white/5 p-4"
+                    >
                         <p className="text-[11px] uppercase tracking-[0.32em] text-slate-500">
-                        Body type
+                        {stat.label}
                         </p>
                         <p className="mt-3 text-lg font-medium text-white">
-                        {selectedBody.kind === 'star' ? 'Star' : 'Planet'}
+                        {stat.value}
                         </p>
                     </div>
+                    ))}
+                </div>
 
-                    <div className="rounded-[22px] border border-white/8 bg-white/4.5 p-4">
-                        <p className="text-[11px] uppercase tracking-[0.32em] text-slate-500">
-                        Visual radius
-                        </p>
-                        <p className="mt-3 text-lg font-medium text-white">
-                        {selectedBody.radius.toFixed(2)}
-                        </p>
-                    </div>
-                    </div>
-
-                    <div className="rounded-[22px] border border-white/8 bg-white/4.5 p-4">
+                <div className="mt-3 rounded-[22px] border border-white/8 bg-white/5 p-4">
                     <p className="text-[11px] uppercase tracking-[0.32em] text-slate-500">
-                        Spatial coordinates
-                    </p>
-                    <p className="mt-3 text-sm font-medium text-white">
-                        X {selectedBody.position[0].toFixed(1)} · Y {selectedBody.position[1].toFixed(1)} · Z {selectedBody.position[2].toFixed(1)}
-                    </p>
-                    </div>
-
-                    <div className="rounded-[22px] border border-white/8 bg-white/4.5 p-4">
-                    <p className="text-[11px] uppercase tracking-[0.32em] text-slate-500">
-                        Snapshot
+                    Quick facts
                     </p>
 
                     <div className="mt-4 space-y-3">
-                        {selectedBodyUi.facts.map((fact) => (
+                    {secondaryStats.map((fact) => (
                         <div
-                            key={fact.label}
-                            className="flex items-start justify-between gap-4 border-b border-white/6 pb-3 last:border-b-0 last:pb-0"
+                        key={fact.label}
+                        className="flex items-start justify-between gap-4 border-b border-white/6 pb-3 last:border-b-0 last:pb-0"
                         >
-                            <span className="text-sm text-slate-400">{fact.label}</span>
-                            <span className="max-w-48 text-right text-sm font-medium text-slate-100">
+                        <span className="text-sm text-slate-400">{fact.label}</span>
+                        <span className="max-w-52 text-right text-sm font-medium text-slate-100">
                             {fact.value}
-                            </span>
+                        </span>
                         </div>
-                        ))}
-                    </div>
+                    ))}
                     </div>
                 </div>
+
+                <div className="mt-3 rounded-[22px] border border-white/8 bg-white/5 p-4">
+                    <p className="text-[11px] uppercase tracking-[0.32em] text-slate-500">
+                    Curated snapshot
+                    </p>
+
+                    <div className="mt-4 space-y-3">
+                    {selectedBodyUi.facts.map((fact) => (
+                        <div
+                        key={fact.label}
+                        className="flex items-start justify-between gap-4 border-b border-white/6 pb-3 last:border-b-0 last:pb-0"
+                        >
+                        <span className="text-sm text-slate-400">{fact.label}</span>
+                        <span className="max-w-52 text-right text-sm font-medium text-slate-100">
+                            {fact.value}
+                        </span>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    className="mt-4 w-full rounded-[18px] border border-white/12 bg-white/8 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/12"
+                >
+                    View more
+                </button>
                 </div>
             </motion.div>
             ) : (
@@ -144,10 +199,10 @@ function PlanetInfoPanel({ selectedBody }: PlanetInfoPanelProps) {
                 </h2>
 
                 <p className="mt-3 max-w-[32ch] text-sm leading-6 text-slate-300">
-                    Click the Sun or any planet to open a focused profile panel with a cleaner, more cinematic presentation layer.
+                    Click the Sun or any planet to open a focused profile panel with live backend data and a curated visual summary.
                 </p>
 
-                <div className="mt-6 rounded-[22px] border border-white/8 bg-white/4.5 p-4">
+                <div className="mt-6 rounded-[22px] border border-white/8 bg-white/5 p-4">
                     <div className="flex items-center gap-3">
                     <div className="h-2.5 w-2.5 rounded-full bg-sky-300 shadow-[0_0_18px_rgba(125,211,252,0.85)]" />
                     <p className="text-sm text-slate-300">
@@ -170,7 +225,7 @@ function PlanetInfoPanel({ selectedBody }: PlanetInfoPanelProps) {
                         Data state
                         </p>
                         <p className="mt-3 text-sm font-medium text-white">
-                        Visual shell ready
+                        Waiting for selection
                         </p>
                     </div>
                     </div>

@@ -9,9 +9,6 @@ if (!API_BASE_URL) {
 async function apiGet<T>(path: string): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${path}`, {
         method: 'GET',
-        headers: {
-        'Content-Type': 'application/json',
-        },
     })
 
     if (!response.ok) {
