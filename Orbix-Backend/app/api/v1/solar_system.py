@@ -65,3 +65,37 @@ async def test_jpl_connection():
             status_code=502,
             detail=f"Failed to connect to JPL Horizons: {str(exc)}",
         ) from exc
+
+
+@router.get("/jpl/all")
+async def get_all_jpl_major_bodies_raw():
+    try:
+        client = JplHorizonsClient()
+        return await client.get_all_major_bodies_raw_data()
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to fetch JPL Horizons major bodies data: {str(exc)}",
+        ) from exc
+
+
+@router.get("/jpl/body/{body_id}")
+async def get_jpl_body_by_id(body_id: str):
+    try:
+        client = JplHorizonsClient()
+        body = await client.get_body_raw_data_by_id(body_id)
+
+        if body is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"JPL Horizons body with id '{body_id}' was not found.",
+            )
+
+        return body
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to fetch JPL Horizons body information: {str(exc)}",
+        ) from exc

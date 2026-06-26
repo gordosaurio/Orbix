@@ -5,6 +5,19 @@ from app.clients.base import BaseApiClient
 from app.core.config import settings
 
 
+HORIZONS_MAJOR_BODIES: dict[str, str] = {
+    "sun": "10",
+    "mercury": "199",
+    "venus": "299",
+    "earth": "399",
+    "mars": "499",
+    "jupiter": "599",
+    "saturn": "699",
+    "uranus": "799",
+    "neptune": "899",
+}
+
+
 class JplHorizonsClient:
     def __init__(self) -> None:
         self._client = BaseApiClient(
@@ -22,3 +35,19 @@ class JplHorizonsClient:
                 "MAKE_EPHEM": "'NO'",
             },
         )
+
+    async def get_all_major_bodies_raw_data(self) -> dict[str, dict[str, Any]]:
+        result: dict[str, dict[str, Any]] = {}
+
+        for body_name, command in HORIZONS_MAJOR_BODIES.items():
+            result[body_name] = await self.get_raw_object_data(command)
+
+        return result
+
+    async def get_body_raw_data_by_id(self, body_id: str) -> dict[str, Any] | None:
+        command = HORIZONS_MAJOR_BODIES.get(body_id.lower())
+
+        if not command:
+            return None
+
+        return await self.get_raw_object_data(command)
