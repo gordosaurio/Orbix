@@ -25,3 +25,45 @@ body {
 canvas {
   display: block;
 }
+
+.orbix-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(226, 232, 240, 0.22) transparent;
+}
+
+.orbix-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.orbix-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.orbix-scrollbar::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.18),
+      rgba(148, 163, 184, 0.24)
+    );
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  min-height: 36px;
+}
+
+.orbix-scrollbar::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.28),
+      rgba(148, 163, 184, 0.34)
+    );
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.orbix-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}

@@ -82,7 +82,7 @@ function PlanetInfoPanel({ selectedBody, selectedBodyInfo }: PlanetInfoPanelProp
                 style={{ backgroundColor: selectedBodyUi.accent }}
                 />
 
-                <div className="relative max-h-[min(78vh,760px)] overflow-y-auto px-4 py-4 md:max-h-[calc(100vh-8rem)] md:px-5 md:py-5">
+                <div className="orbix-scrollbar relative max-h-[min(78vh,760px)] overflow-y-auto px-4 py-4 md:max-h-[calc(100vh-8rem)] md:px-5 md:py-5">
                 <div className="mb-4 flex items-start justify-between gap-4">
                     <div className="min-w-0">
                     <p
