@@ -4,7 +4,10 @@ import re
 
 from app.clients.base import BaseApiClient
 from app.core.config import settings
-from app.schemas.solar_system import PlanetSpecializedInfoSchema
+from app.schemas.solar_system import (
+    PlanetSpecializedInfoSchema,
+    SunSpecializedInfoSchema,
+)
 
 
 HORIZONS_MAJOR_BODIES: dict[str, str] = {
@@ -70,6 +73,15 @@ class JplHorizonsClient:
             name=planet_name.strip(),
             text=result_text,
         )
+
+    async def get_specialized_sun_info(self) -> SunSpecializedInfoSchema | None:
+        raw = await self.get_raw_object_data(HORIZONS_MAJOR_BODIES["sun"])
+        result_text = raw.get("result", "")
+
+        if not result_text:
+            return None
+
+        return self._parse_specialized_sun_info(result_text)
 
     def _parse_specialized_planet_info(
         self, name: str, text: str
@@ -147,6 +159,84 @@ class JplHorizonsClient:
             escapeSpeedKmS=escape_speed,
             obliquityToOrbit=obliquity.strip() if obliquity else None,
             geometricAlbedo=geometric_albedo,
+        )
+
+    def _parse_specialized_sun_info(self, text: str) -> SunSpecializedInfoSchema:
+        revised = self._extract(r"Revised:\s*([A-Za-z]+\s+\d{1,2},\s+\d{4})", text)
+
+        mean_radius = self._extract_float(
+            r"Vol\.\s*mean radius,\s*km\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        solar_radius = self._extract_float(
+            r"Solar radius \(IAU2015\)\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        photosphere_radius = self._extract_float(
+            r"Radius \(photosphere\)\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        mean_density = self._extract_float(
+            r"Mean density,\s*g\/cm\^3\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        surface_gravity = self._extract_float(
+            r"Surface gravity\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        escape_speed = self._extract_float(
+            r"Escape speed,\s*km\/s\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        effective_temperature = self._extract_float(
+            r"Effective temp,\s*K\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        photosphere_temp_bottom = self._extract_float(
+            r"Photosphere temp\., K\s*=\s*([0-9]+(?:\.[0-9]+)?)\s*\(bottom\)", text
+        )
+
+        photosphere_temp_top = self._extract_float(
+            r"Photosphere temp\., K\s*=\s*([0-9]+(?:\.[0-9]+)?)\s*\(top\)", text
+        )
+
+        sidereal_rotation_days = self._extract_float(
+            r"Adopted sid\. rot\. per\.\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        obliquity_to_ecliptic = self._extract_float(
+            r"Obliquity to ecliptic\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        solar_constant = self._extract_float(
+            r"Solar constant \(1 AU\)\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        luminosity = self._extract_float(
+            r"Luminosity,\s*10\^24 J\/s\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        sunspot_cycle = self._extract_float(
+            r"Sunspot cycle\s*=\s*([0-9]+(?:\.[0-9]+)?)", text
+        )
+
+        return SunSpecializedInfoSchema(
+            name="Sun",
+            revised=revised,
+            meanRadiusKm=mean_radius,
+            solarRadiusKm=solar_radius,
+            photosphereRadiusKm=photosphere_radius,
+            meanDensityGcm3=mean_density,
+            surfaceGravityMs2=surface_gravity,
+            escapeSpeedKmS=escape_speed,
+            effectiveTemperatureK=effective_temperature,
+            photosphereTempBottomK=photosphere_temp_bottom,
+            photosphereTempTopK=photosphere_temp_top,
+            siderealRotationPeriodDays=sidereal_rotation_days,
+            obliquityToEclipticDeg=obliquity_to_ecliptic,
+            solarConstantWm2=solar_constant,
+            luminosity10e24Js=luminosity,
+            sunspotCycleYears=sunspot_cycle,
         )
 
     def _extract(self, pattern: str, text: str, value_after_label: bool = False) -> str | None:

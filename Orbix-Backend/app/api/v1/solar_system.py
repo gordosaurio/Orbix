@@ -5,6 +5,7 @@ from app.schemas import (
     BodyGeneralInfoSchema,
     PlanetSpecializedInfoSchema,
     PlanetsGeneralInfoResponseSchema,
+    SunSpecializedInfoSchema,
 )
 from app.services.planets import PlanetService
 from app.services.stars import StarService
@@ -106,7 +107,7 @@ async def get_jpl_body_by_id(body_id: str):
 
 
 @router.get(
-    "/jpl/specialized/{planet_name}",
+    "/jpl/specialized/planet/{planet_name}",
     response_model=PlanetSpecializedInfoSchema,
 )
 async def get_jpl_specialized_planet_info(planet_name: str):
@@ -127,4 +128,29 @@ async def get_jpl_specialized_planet_info(planet_name: str):
         raise HTTPException(
             status_code=502,
             detail=f"Failed to fetch JPL specialized planet information: {str(exc)}",
+        ) from exc
+
+
+@router.get(
+    "/jpl/specialized/sun",
+    response_model=SunSpecializedInfoSchema,
+)
+async def get_jpl_specialized_sun_info():
+    try:
+        client = JplHorizonsClient()
+        sun = await client.get_specialized_sun_info()
+
+        if sun is None:
+            raise HTTPException(
+                status_code=404,
+                detail="JPL specialized data for Sun was not found.",
+            )
+
+        return sun
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to fetch JPL specialized Sun information: {str(exc)}",
         ) from exc

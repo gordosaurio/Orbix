@@ -47,5 +47,24 @@ class PlanetSpecializedInfoSchema(BaseModel):
     geometricAlbedo: float | None = None
 
 
+class SunSpecializedInfoSchema(BaseModel):
+    name: str
+    revised: str | None = None
+    meanRadiusKm: float | None = None
+    solarRadiusKm: float | None = None
+    photosphereRadiusKm: float | None = None
+    meanDensityGcm3: float | None = None
+    surfaceGravityMs2: float | None = None
+    escapeSpeedKmS: float | None = None
+    effectiveTemperatureK: float | None = None
+    photosphereTempBottomK: float | None = None
+    photosphereTempTopK: float | None = None
+    siderealRotationPeriodDays: float | None = None
+    obliquityToEclipticDeg: float | None = None
+    solarConstantWm2: float | None = None
+    luminosity10e24Js: float | None = None
+    sunspotCycleYears: float | None = None
+
+
 class PlanetsGeneralInfoResponseSchema(RootModel[Dict[str, BodyGeneralInfoSchema]]):
     pass

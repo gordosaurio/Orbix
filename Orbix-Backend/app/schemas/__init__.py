@@ -3,6 +3,7 @@ from app.schemas.solar_system import (
     MassSchema,
     PlanetSpecializedInfoSchema,
     PlanetsGeneralInfoResponseSchema,
+    SunSpecializedInfoSchema,
     VolumeSchema,
 )
 
@@ -11,5 +12,6 @@ __all__ = [
     "MassSchema",
     "PlanetSpecializedInfoSchema",
     "PlanetsGeneralInfoResponseSchema",
+    "SunSpecializedInfoSchema",
     "VolumeSchema",
 ]
