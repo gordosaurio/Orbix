@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SpaceScene from './scene/components/SpaceScene'
 import PlanetInfoPanel from './components/planet/PlanetInfoPanel'
 import type { SelectedPlanetState } from './types/scene'
+import { getPlanetInfoById, getSunInfo } from './lib/api'
 
 function App() {
   const [selectedPlanet, setSelectedPlanet] = useState<SelectedPlanetState | null>(null)
@@ -14,6 +15,27 @@ function App() {
     setSelectedPlanet(null)
     setResetToken((prev) => prev + 1)
   }
+
+  useEffect(() => {
+    if (!selectedPlanet) return
+
+    const fetchBodyInfo = async () => {
+      try {
+        if (selectedPlanet.kind === 'star') {
+          const sunData = await getSunInfo()
+          console.log('SUN INFO =>', sunData)
+          return
+        }
+
+        const planetData = await getPlanetInfoById(selectedPlanet.id)
+        console.log(`PLANET INFO (${selectedPlanet.id}) =>`, planetData)
+      } catch (error) {
+        console.error('Error fetching celestial body info:', error)
+      }
+    }
+
+    void fetchBodyInfo()
+  }, [selectedPlanet?.id, selectedPlanet?.kind])
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-black text-white">

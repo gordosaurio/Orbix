@@ -26,12 +26,12 @@ function OrbitalBody({
 
     const initialAngle = useMemo(() => {
         const angleMap: Record<string, number> = {
-        mercury: 0.2,
+        mercure: 0.2,
         venus: 0.8,
-        earth: 1.4,
+        terre: 1.4,
         mars: 2.1,
         jupiter: 2.8,
-        saturn: 3.5,
+        saturne: 3.5,
         uranus: 4.2,
         neptune: 5.0,
         }
