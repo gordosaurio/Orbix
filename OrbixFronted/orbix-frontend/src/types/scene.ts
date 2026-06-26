@@ -3,4 +3,6 @@ export type SelectedPlanetState = {
     name: string
     radius: number
     position: [number, number, number]
+    accent?: string
+    summary?: string
 }
