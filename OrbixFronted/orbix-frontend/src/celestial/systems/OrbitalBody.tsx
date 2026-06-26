@@ -74,6 +74,7 @@ function OrbitalBody({
         if (isSelected) {
         const p = worldPosition.current
         onPlanetPositionChange({
+            kind: 'planet',
             id: config.id,
             name: config.name,
             radius: config.radius,
@@ -87,6 +88,7 @@ function OrbitalBody({
     const handleSelect = () => {
         const p = worldPosition.current
         onSelectPlanet({
+        kind: 'planet',
         id: config.id,
         name: config.name,
         radius: config.radius,
