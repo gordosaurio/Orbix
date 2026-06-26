@@ -171,7 +171,7 @@ function PlanetInfoPanel({ selectedBody, selectedBodyInfo }: PlanetInfoPanelProp
 
                 <button
                     type="button"
-                    className="mt-3 w-full rounded-[16px] border border-white/12 bg-white/8 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/12"
+                    className="mt-3 w-full rounded-2xl border border-white/12 bg-white/8 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/12"
                 >
                     View more
                 </button>
