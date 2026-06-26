@@ -9,7 +9,7 @@ body,
 }
 
 body {
-  overflow: hidden;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 28%),
     radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.06), transparent 22%),

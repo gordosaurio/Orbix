@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
+import { useNavigate } from 'react-router-dom'
 import type { SelectedPlanetState } from '../../types/scene'
 import type { CelestialBodyApiResponse } from '../../types/api'
 import { celestialUiMap } from '../../data/planetUi'
@@ -44,6 +45,7 @@ function formatDiscoveryDate(value?: string) {
 }
 
 function PlanetInfoPanel({ selectedBody, selectedBodyInfo }: PlanetInfoPanelProps) {
+    const navigate = useNavigate()
     const selectedBodyUi = selectedBody ? celestialUiMap[selectedBody.id] : null
 
     const primaryStats = selectedBodyInfo
@@ -62,6 +64,17 @@ function PlanetInfoPanel({ selectedBody, selectedBodyInfo }: PlanetInfoPanelProp
             { label: 'Discovery date', value: formatDiscoveryDate(selectedBodyInfo.discoveryDate) },
         ]
         : []
+
+    const handleViewMore = () => {
+        if (!selectedBody) return
+
+        if (selectedBody.kind === 'star') {
+        navigate('/sun')
+        return
+        }
+
+        navigate(`/planet/${selectedBody.id}`)
+    }
 
     return (
         <aside className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-auto md:right-8 md:top-24 md:w-96 lg:w-104">
@@ -171,6 +184,7 @@ function PlanetInfoPanel({ selectedBody, selectedBodyInfo }: PlanetInfoPanelProp
 
                 <button
                     type="button"
+                    onClick={handleViewMore}
                     className="mt-3 w-full rounded-2xl border border-white/12 bg-white/8 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/12"
                 >
                     View more
