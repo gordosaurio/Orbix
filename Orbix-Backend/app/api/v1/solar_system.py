@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
+from app.clients.jpl_horizons import JplHorizonsClient
 from app.schemas import BodyGeneralInfoSchema, PlanetsGeneralInfoResponseSchema
 from app.services.planets import PlanetService
 from app.services.stars import StarService
@@ -51,4 +52,16 @@ async def get_planet_info(planet_id: str):
         raise HTTPException(
             status_code=502,
             detail=f"Failed to fetch planet information: {str(exc)}",
+        ) from exc
+
+
+@router.get("/jpl/test")
+async def test_jpl_connection():
+    try:
+        client = JplHorizonsClient()
+        return await client.get_raw_object_data("499")
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to connect to JPL Horizons: {str(exc)}",
         ) from exc
