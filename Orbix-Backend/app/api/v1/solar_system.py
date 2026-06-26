@@ -30,3 +30,25 @@ async def get_planets_info():
             status_code=502,
             detail=f"Failed to fetch planets information: {str(exc)}",
         ) from exc
+
+
+@router.get("/planet/{planet_id}", response_model=BodyGeneralInfoSchema)
+async def get_planet_info(planet_id: str):
+    try:
+        service = PlanetService()
+        planet = await service.get_planet_general_info_by_id(planet_id)
+
+        if planet is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Planet with id '{planet_id}' was not found.",
+            )
+
+        return planet
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to fetch planet information: {str(exc)}",
+        ) from exc
