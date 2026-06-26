@@ -22,3 +22,9 @@ export type CelestialBodyApiResponse = {
 export type PlanetApiResponse = CelestialBodyApiResponse
 
 export type SunApiResponse = CelestialBodyApiResponse
+
+export type PlanetSpecializedInfoApiResponse = Record<string, unknown>
+
+export type SunSpecializedInfoApiResponse = Record<string, unknown>
+
+export type PlanetMediaApiResponse = Record<string, unknown>
